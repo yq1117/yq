@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+    * {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .calculator {
+        width: 326px;
+        height: 460px;
+        margin: 80px auto;
+        background-color: #368590;
+        border-radius: 5px;
+        box-shadow: 0 2px 15px black;
+        overflow: hidden;
+    }
+
+    .calculator .c_screen {
+        position: relative;
+        width: 326px;
+        height: 110px;
+        background-color: #96a4c2;
+        border-radius: 5px;
+        box-shadow: inherit;
+    }
+
+    .calculator .c_screen > p {
+        position: absolute;
+        top: 50%;
+        margin-top: -28px;
+        width: 236px;
+        text-align: center;
+        word-break: break-all;
+        color: #fff;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 10px 45px;
+    }
+
+    .calculator .c_row {
+        margin: 0 23px;
+    }
+
+    button {
+        cursor: pointer;
+        width: 60px;
+        height: 45px;
+        margin: 20px 2px 0;
+        border: 0px;
+        border-radius: 5px;
+        color: #fff;
+        background-color: #2b2f5b;
+        outline: none;
+    }
+
+    button::selection {
+        color: #fff;
+    }
+
+    button:active {
+        box-shadow: 0 0 5px 5px dodgerblue;
+    }
+    .press{
+        box-shadow: 0 0 5px 5px dodgerblue;
+    }
+    .c_func_btn {
+        background: linear-gradient(to bottom, rgba(252, 156, 23, 1) 0%, rgba(247, 126, 27, 1) 100%);
+    }
+    .d{
+        width: 60px;
+        height: 110px;
+        float: right;
+        position: relative;
+        bottom:66px;
+        right:32px;
+    }
+    .z{
+        width: 129px;
+        height: 45px;
+    }
+</style>
+</head>
+<body>
+	<div class="calculator">
+        <div class="c_screen">
+            <p></p>
+        </div>
+        <div class="c_btn_wrapper">
+            <div class="c_row">
+                <button class="c_func_btn" id="/">/</button>
+                <button class="c_func_btn" id="*">*</button>
+                <button class="c_func_btn" id="CE">CE</button>
+                <button class="c_func_btn" id="AC">AC</button>
+            </div>
+            <div class="c_row">
+                <button id="7">7</button>
+                <button id="8">8</button>
+                <button id="9">9</button>
+                <button class="c_func_btn" id="+">+</button>
+            </div>
+            <div class="c_row">
+                <button id="4">4</button>
+                <button id="5">5</button>
+                <button id="6">6</button>
+                <button class="c_func_btn" id="-">-</button>
+            </div>
+            <div class="c_row">
+                <button id="1">1</button>
+                <button id="2">2</button>
+                <button id="3">3</button>
+
+            </div>
+            <button class="c_func_btn d" id="=">=</button>
+            <div class="c_row">
+                <button class="z" id="0">0</button>
+                <button id=".">.</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        var btnList = document.getElementsByTagName('button');
+        var show = document.getElementsByTagName('p')[0];
+
+        var symbolB = false;
+    //记录符号
+    var symbol = null;
+    //记录a值，b值,记录结果,保存计算结果
+    var aNum = 0, bNum = 0, result = 0, resultCookic = 0;
+    
+    document.onkeydown=function(event){
+   var e = event || window.event || arguments.callee.caller.arguments[0];
+    if(e && e.keyCode==57||e.keyCode==105){ // 按 9 
+        show.innerText+=9;
+        aNum = Number(aNum);
+        changeStyle(9);    
+    }
+    if(e && e.keyCode==56||e.keyCode==104){ // 按 Esc 
+        show.innerText+=8;
+        changeStyle(8);    
+    }
+    if(e && e.keyCode==55||e.keyCode==103){ // 按 Esc 
+        show.innerText+=7;
+        changeStyle(7);
+    }
+    if(e && e.keyCode==54||e.keyCode==102){ // 按 Esc 
+        show.innerText+=6;
+        changeStyle(6);    
+    }
+    if(e && e.keyCode==53||e.keyCode==101){ // 按 Esc 
+        show.innerText+=5;
+        changeStyle(5);    
+    }
+    if(e && e.keyCode==52||e.keyCode==100){ // 按 Esc 
+        show.innerText+=4;
+        changeStyle(4);    
+    }
+    if(e && e.keyCode==51||e.keyCode==99){ // 按 Esc 
+        show.innerText+=3;
+        changeStyle(3);    
+    }
+    if(e && e.keyCode==50||e.keyCode==98){ // 按 Esc 
+        show.innerText+=2;
+        changeStyle(2);    
+    }
+    if(e && e.keyCode==49||e.keyCode==97){ // 按 Esc 
+        show.innerText+=1;
+        changeStyle(1);    
+    }
+    if(e && e.keyCode==48||e.keyCode==96){ // 按 Esc 
+        show.innerText+=0;
+        changeStyle(0);    
+    }
+    if(e && e.keyCode==107){ // 按 Esc 
+        //show.innerText+="+";
+        changeStyle("+")
+        addition(aNum, bNum);    
+    }
+    if(e && e.keyCode==109){ // 按 Esc 
+        show.innerText="-";
+        changeStyle("-")     
+    }
+    if(e && e.keyCode==106){ // 按 Esc 
+        show.innerText="*";
+        changeStyle("*")     
+    }  
+    if(e && e.keyCode==111){ // 按 Esc 
+        show.innerText="/";
+        changeStyle("/")     
+    }  
+    if(e && e.keyCode==8){ // 按 Esc 
+        // show.innerText="退格";
+        var str=show.innerText;
+        show.innerText=str.slice(0,str.length-1);
+        changeStyle("AC")     
+    }  
+    if(e && e.keyCode==46){ // 按 Esc 
+        // show.innerText="删除";
+        show.innerText="";
+        changeStyle("CE")     
+    }  
+    if(e && e.keyCode==13){ // 按 Esc 
+        show.innerText="回车等于";
+        changeStyle("=")     
+    } 
+    if(e && e.keyCode==110){ // 按 Esc 
+        show.innerText+=".";
+        changeStyle(".")     
+    }                
+}; 
+
+for (var i = 0, len = btnList.length; i < len; i++) {
+
+    btnList[i].onclick = function () {
+
+            //结果
+            if (this.innerText == '=') {
+                console.log(aNum , bNum);
+
+                if (symbol == '+') {
+                    addition(aNum, bNum);
+                } else if (symbol == '-') {
+                    subtraction(aNum, bNum);
+
+                } else if (symbol == '*') {
+                    multiplication(aNum, bNum);
+
+                } else if (symbol == '/') {
+                    division(aNum, bNum);
+                }
+                console.log(result);
+                resultCookic = result;
+                result = 0;
+                aNum = 0;
+                bNum = 0;
+                symbolB = false;
+
+            }else{
+                //初始化和归零
+                if (this.innerText == 'AC') {
+                    //初始化所有值
+                    result = 0;
+                    resultCookic = 0;
+                    aNum = 0;
+                    bNum = 0;
+                    show.innerText = "";
+                    return;
+                } else if (this.innerText == 'CE') {
+                    //初始化所有值
+                    result = 0;
+                    resultCookic = 0;
+                    aNum = 0;
+                    bNum = 0;
+                    show.innerText = result;
+                    return;
+                } else if (this.innerText == '+' ||
+                    this.innerText == '-' ||
+                    this.innerText == '*' ||
+                    this.innerText == '/'
+                    ) {
+                    //如果点击了符号按钮，那么之后输入的值就是b值
+                    //记录符号
+                    symbol = this.innerText;
+                    show.innerText = symbol;
+                    symbolB = true;
+                } else {
+                    if (symbolB == false) {
+                        aNum += this.innerText;
+                        aNum = Number(aNum);
+                        console.log(aNum);
+                        show.innerText = aNum;
+                    } else {
+                        //如果计算完一次结果，再次点击符号按钮进行计算，就把上一次的计算结果赋值给a
+                        if(aNum == 0 ){
+                            aNum = resultCookic;
+                        }
+                        bNum += this.innerText;
+                        bNum = Number(bNum);
+                        console.log(bNum);
+                        show.innerText = bNum;
+                    }
+                }
+            }
+        }
+    }
+
+
+    /**
+     * 加法
+     * @param a{number}
+     * @param b{number}
+     */
+     function addition(a, b) {
+        result = a + b;
+        show.innerText = result;
+    }
+
+    /**
+     * 减法
+     * @param a{number}
+     * @param b{number}
+     */
+     function subtraction(a, b) {
+        result = a - b;
+        show.innerText = result;
+    }
+
+    /**
+     * 乘法
+     * @param a{number}
+     * @param b{number}
+     */
+     function multiplication(a, b) {
+        result = a * b;
+        show.innerText = result;
+    }
+
+    /**
+     * 除法
+     * @param a{number}
+     * @param b{number}
+     */
+     function division(a, b) {
+        result = a / b;
+        show.innerText = result;
+    }
+    
+    function changeStyle(p){
+       document.getElementById(p).classList.add("press");
+       setTimeout(function(){
+         document.getElementById(p).classList.remove("press");
+       },300)
+    }
+</script>
+</body>
+</html>
